@@ -142,40 +142,47 @@ def cnmf_patches(args_in):
         Yr,sn,g,psx=cse.pre_processing.preprocess_data(Yr,**options['preprocess_params'])
         logger.info('Preprocess Data')
         
+        print 'preprocessing done'
         Ain, Cin, b_in, f_in, center=cse.initialization.initialize_components(Y, **options['init_params']) 
         logger.info('Initialize Components')                                                       
-    
+        print 'initialization done'
         A,b,Cin = cse.spatial.update_spatial_components(Yr, Cin, f_in, Ain, sn=sn, **options['spatial_params'])  
         options['temporal_params']['p'] = 0 # set this to zero for fast updating without deconvolution
         logger.info('Spatial Update')                                                           
         
-        
+        A = A.toarray()  
+         
+        th = 0.01
+        for i in range(A.shape[1]):
+            A[A[:, i] < th*max(A[:, i]), i] = 0
+               
+        A = spr.coo_matrix(A)
+        print 'spatial update done'
         C,f,S,bl,c1,neurons_sn,g,YrA = cse.temporal.update_temporal_components(Yr,A,b,Cin,f_in,bl=None,c1=None,sn=None,g=None,**options['temporal_params'])
         logger.info('Temporal Update')  
         
         A_m,C_m,nr_m,merged_ROIs,S_m,bl_m,c1_m,sn_m,g_m=cse.merging.merge_components(Yr,A,b,C,f,S,sn,options['temporal_params'], options['spatial_params'], bl=bl, c1=c1, sn=neurons_sn, g=g, thr=options['merging']['thr'], fast_merge = True)
         logger.info('Merge Components')                                                       
-        
+        print 'mergin done'
         A2,b2,C2 = cse.spatial.update_spatial_components(Yr, C_m, f, A_m, sn=sn, **options['spatial_params'])
         #sparsify instead to speed things up
-        '''
-        A = A.toarray()  
-        print A.shape
-        print bl_m.shape
+        
+        A2 = A2.toarray()  
+        print A2.shape
+        print type(A2)
         th = 0.01
-        for i in range(A.shape[1]):
-            A[A[:, i] < th*max(A[:, i]), i] = 0
-        b2 = bl_m
-        C2 = C_m        
-        A2 = spr.coo_matrix(A)  
-        '''
+        for i in range(A2.shape[1]):
+            A2[A2[:, i] < th*max(A2[:, i]), i] = 0
+        
+        A2 = spr.coo_matrix(A2)  
+       
         logger.info('Update Spatial II')                                                       
         options['temporal_params']['p'] = p # set it back to original value to perform full deconvolution
         C2,f2,S2,bl2,c12,neurons_sn2,g21,YrA = cse.temporal.update_temporal_components(Yr,A2,b2,C2,f,bl=None,c1=None,sn=None,g=None,**options['temporal_params'])
         logger.info('Update Temporal II')                                                       
         Y=[]
         Yr=[]
-
+        print 'patch done'
         return idx_,shapes,A2,b2,C2,f2,S2,bl2,c12,neurons_sn2,g21,sn,options
     
     else:

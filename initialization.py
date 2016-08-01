@@ -67,7 +67,7 @@ def initialize_components(Y, K=30, gSig=[5, 5], gSiz=None, ssub=1, tsub=1, nIter
     if sn is not None:
         min_noise = np.percentile(sn, 2)
         noise = np.maximum(sn, min_noise)
-        Y = Y / np.reshape(noise, d + (-1,))
+        Y = Y / np.reshape(noise, d + (-1,),order='F')
 
     # spatial downsampling
     mean_val = np.mean(Y)

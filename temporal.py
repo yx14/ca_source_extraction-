@@ -173,7 +173,7 @@ def update_temporal_components(Y, A, b, Cin, fin, bl = None,  c1 = None, g = Non
                 if 'IPPPDIR' in os.environ and 'IPPPROFILE' in os.environ:
                     pdir, profile = os.environ['IPPPDIR'], os.environ['IPPPROFILE']
                 else:
-                    raise Exception('envirnomment variables not found, please source slurmAlloc.rc')
+                    raise Exception('environment variables not found, please source slurmAlloc.rc')
         
                 c = Client(ipython_dir=pdir, profile=profile)
                 print 'Using '+ str(len(c)) + ' processes'

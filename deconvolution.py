@@ -401,7 +401,8 @@ def estimate_time_constant(fluor, p = 2, sn = None, lags = 5, fudge_factor = 1.)
     g       : estimated coefficients of the AR process
     """    
     
-
+    import ipdb
+    ipdb.set_trace()
     if sn is None:
         sn = GetSn(fluor)
         
@@ -410,6 +411,7 @@ def estimate_time_constant(fluor, p = 2, sn = None, lags = 5, fudge_factor = 1.)
     xc = xc[:,np.newaxis]
     
     A = scipy.linalg.toeplitz(xc[lags+np.arange(lags)],xc[lags+np.arange(p)]) - sn**2*np.eye(lags,p)
+
     g = np.linalg.lstsq(A,xc[lags+1:])[0]
     gr = np.roots(np.concatenate([np.array([1]),-g.flatten()]))
     gr = (gr+gr.conjugate())/2.

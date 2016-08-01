@@ -33,7 +33,7 @@ def temporal_merge(Y, A, b, C, f):
     C_comb = np.zeros([A.shape[1] - merge_u, C.shape[1]])
     
     #A_comb has components merged within merge_x elements
-    
+    A = A.todense()
     for i in range(A.shape[1]):
         if any(i == k for k in merge_x):
             inds = [j for j, x in enumerate(merge_x) if x == i]  
