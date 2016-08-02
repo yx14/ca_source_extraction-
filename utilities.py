@@ -75,17 +75,29 @@ def temporal_merge(Y, A, b, C, f,  bl = None,  c1 = None, g = None,  sn = None, 
             A_comb2[:, merge_ct] = A_comb[:, i]
             C_comb[merge_ct, :] = C[i, :]
             merge_ct = merge_ct + 1
-    A_comb2 = np.delete(A_comb2, sum(A_comb2) == 0, axis = 1)
-    C_comb = np.delete(C_comb, sum(A_comb2) == 0, axis = 0)
+    print "merge_ct ", merge_ct 
+    '''
+    print "sum ", np.sum(np.transpose(sum(A_comb2) == 0))
+    del_cols = []
+    listtemp = sum(A_comb2) == 0
+    listtemp = listtemp.tolist()
+    for i in listtemp:
+        if i:
+            del_cols.append(listtemp.index(i))
+    print "del_cols", len(del_cols)   
+    '''
+    del_cols = range(merge_ct, A.shape[1])
+    A_comb2 = np.delete(A_comb2, del_cols, axis = 1)
+    C_comb = np.delete(C_comb, del_cols, axis = 0)
     A_comb2 = coo_matrix(A_comb2)
     #Yr = np.reshape(Y, [Y.shape[0]*Y.shape[1], Y.shape[2]])
     print Y.shape
     print A_comb2.shape
     print C_comb.shape
-    print len(sum(C_comb) == 0)
+     
     
-    C_comb,f,S_comb,bl,c1,sn,g,YrA  = cse.temporal.update_temporal_components(Y,A_comb2,b,C_comb,f,  bl = None,  c1 = None, g = None,  sn = None, ITER=2, method_foopsi='constrained_foopsi', n_processes=1, backend='single_thread',memory_efficient=False, debug=False, **kwargs)
-    return A_comb2, C_comb, S_comb, f, YrA  
+    #C_comb,f,S_comb,bl,c1,sn,g,YrA  = cse.temporal.update_temporal_components(Y,A_comb2,b,C_comb,f,  bl = None,  c1 = None, g = None,  sn = None, ITER=2, method_foopsi='constrained_foopsi', n_processes=1, backend='single_thread',memory_efficient=False, debug=False, **kwargs)
+    return A_comb2, C_comb  
 #%%
 
 
@@ -94,7 +106,7 @@ def CNMFSetParms(Y, n_processes, K=30, gSig=[5, 5], ssub=1, tsub=1, p=2, p_ssub=
     Any parameter that is not set get a default value specified
     by the dictionary default options
     """
-
+     
     if type(Y) is tuple:
         dims, T = Y[:-1], Y[-1]
     else:

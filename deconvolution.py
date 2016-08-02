@@ -78,8 +78,11 @@ def constrained_foopsi(fluor, bl = None,  c1 = None, g = None,  sn = None, p = N
     if p is None:
         raise Exception("You must specify the value of p")
         
-    if g is None or sn is None:        
+    if g is None or sn is None:     
+        
         g,sn = estimate_parameters(fluor, p=p, sn=sn, g = g, range_ff=noise_range, method=noise_method, lags=lags, fudge_factor=fudge_factor)
+        
+           
     if p == 0:       
         c1 = 0
         g = np.array(0)
@@ -401,8 +404,8 @@ def estimate_time_constant(fluor, p = 2, sn = None, lags = 5, fudge_factor = 1.)
     g       : estimated coefficients of the AR process
     """    
     
-    import ipdb
-    ipdb.set_trace()
+    #from IPython.core.debugger import Tracer
+    #Tracer()()
     if sn is None:
         sn = GetSn(fluor)
         

@@ -280,7 +280,9 @@ def update_temporal_components(Y, A, b, Cin, fin, bl = None,  c1 = None, g = Non
             dview.results.clear()   
             c.purge_results('all')
             c.purge_everything()
-
+        
+        print np.sum(np.transpose(np.sum(np.isnan(Cin))))
+        print np.sum(np.transpose(np.sum(np.isnan(C))))
         if scipy.linalg.norm(Cin - C,'fro')/scipy.linalg.norm(C,'fro') <= 1e-3:
             # stop if the overall temporal component does not change by much
             print "stopping: overall temporal component not changing significantly"
