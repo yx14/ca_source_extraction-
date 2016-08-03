@@ -504,7 +504,7 @@ def order_components(A, C, YrA, S, d1, d2):
         
         filled = len(xpos)
          
-        if filled > px_min and filled < px_max and filled*1.0/(x_range*y_range) < 0.5: #(x_range/y_range > 1.1 or x_range/y_range < 0.9): 
+        if filled > px_min and filled < px_max and filled*1.0/(x_range*y_range) < 0.5 and (x_range/y_range > 1.1 or x_range/y_range < 0.9): 
             score_arr[:, i] = 1
     
     del_inds = np.where(score_arr == 0)

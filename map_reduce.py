@@ -160,7 +160,7 @@ def cnmf_patches(args_in):
         print 'spatial update done'
         C,f,S,bl,c1,neurons_sn,g,YrA = cse.temporal.update_temporal_components(Yr,A,b,Cin,f_in,bl=None,c1=None,sn=None,g=None,**options['temporal_params'])
         logger.info('Temporal Update')  
-        
+        '''
         A_m,C_m,nr_m,merged_ROIs,S_m,bl_m,c1_m,sn_m,g_m=cse.merging.merge_components(Yr,A,b,C,f,S,sn,options['temporal_params'], options['spatial_params'], bl=bl, c1=c1, sn=neurons_sn, g=g, thr=options['merging']['thr'], fast_merge = True)
         logger.info('Merge Components')                                                       
         print 'mergin done'
@@ -184,7 +184,10 @@ def cnmf_patches(args_in):
         Yr=[]
         print 'patch done'
         return idx_,shapes,A2,b2,C2,f2,S2,bl2,c12,neurons_sn2,g21,sn,options
-    
+        '''
+        
+        #ADDED
+        return idx_,shapes, A, b, C, f, S, bl, c1, neurons_sn, g, sn, options
     else:
         return None                
         
