@@ -482,7 +482,7 @@ def order_components(A, C, YrA, S, d1, d2):
 
     """
     
-    print 'updated'
+    
     A = np.array(A.todense())
     
     score_arr = np.zeros([1, A.shape[1]])
@@ -496,15 +496,15 @@ def order_components(A, C, YrA, S, d1, d2):
         tup = np.nonzero(res)
         xpos = tup[0]
         ypos = tup[1]
-
+        
+         
         x_range = np.max(xpos) - np.min(xpos)
         y_range = np.max(ypos) - np.min(ypos)
-        x_val = np.std(xpos)/x_range
-        y_val = np.std(ypos)/y_range
         
-        filled = len(xpos)
+    
+        filled = xpos.shape[0]
          
-        if filled > px_min and filled < px_max and filled*1.0/(x_range*y_range) < 0.5 and (x_range/y_range > 1.1 or x_range/y_range < 0.9): 
+        if filled > px_min and filled < px_max and filled*1.0/(x_range*y_range) < 0.5 : #and (x_val/y_val > 1.1 or y_val/x_val < 0.9): #(x_range/y_range > 1.1 or x_range/y_range < 0.9): 
             score_arr[:, i] = 1
     
     del_inds = np.where(score_arr == 0)

@@ -87,6 +87,7 @@ def initialize_components(Y, K=30, gSig=[5, 5], gSiz=None, ssub=1, tsub=1, nIter
     #END ADDED
     
     #CREATE THE HALS INITIALIZATION IN PYTHON 
+    print "Using Hals..."
     Ain, Cin, b_in, f_in = HALS_initialization(Y_ds, K)
     if use_hals:
         print 'Refining Components...'
@@ -154,14 +155,16 @@ def HALS_initialization(Y, nr=30):
     else:
         print "The dimensions, ", sizY, " are out of range."
     med = np.array(med)
-    
+    Ytemp = np.zeros(Y.shape)
     #subtract median(i, j) from each entry i, j
     if dimY == 2:
         for i in range(T):
-            Y[:, :, i] = np.subtract(Y[:, :, i], med)
+            Ytemp[:, :, i] = np.subtract(Y[:, :, i], med)
     else:
         for i in range(T):
-            Y[:, :, :, i] = np.subtract(Y[:, :, :, i], med)
+            Ytemp[:, :, :, i] = np.subtract(Y[:, :, :, i], med)
+    
+    Y = Ytemp
     
     if init_hals_method.lower() == 'random':
         A = np.random.rand(d, nr)
@@ -188,7 +191,7 @@ def HALS_initialization(Y, nr=30):
         A[ A < 0] = 0
         K = sum(np.ndarray.flatten(BW))
     
-    max_iter_hals_in = 400
+    max_iter_hals_in = 200
     #check the pre-written HALS program for speed
     
     #ADDED 
@@ -196,10 +199,10 @@ def HALS_initialization(Y, nr=30):
     f = np.maximum(np.dot(np.transpose(b), Y)/np.linalg.norm(b)**2, 0)
     Y = np.reshape(Y, sizY)
     
-    for iter in range(400):
-        [A, C, b, f] = hals(Y, A, C, b, f, 5, 1)
+    for iter in range(max_iter_hals_in):
+        [A, C, b, f] = hals(Y, A, C, b, f, 1, 1)
         
-        th = 0.0075 + 0.005*np.floor(iter/200)
+        #th = 0.0075 + 0.005*np.floor(iter/200)
         th = 0.01
         for i in range(A.shape[1]):
             A[A[:, i] < th*max(A[:, i]), i] = 0
@@ -238,6 +241,7 @@ def HALS_spatial(Y, A, C):
     maxIter = 1
     
     #initialization
+
     K = A.shape[1]
     U = np.dot(Y, np.transpose(C))
     V = np.dot(C, np.transpose(C))

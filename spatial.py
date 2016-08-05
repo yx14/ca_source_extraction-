@@ -465,9 +465,10 @@ def threshold_components(A, dims, medw=(3, 3), thr=0.9999,
         nrg = np.zeros((num_features, 1))
         for j in range(num_features):
             nrg[j] = np.sum(Ath[labeled_array == j + 1, i]**2)
-
-        indm = np.argmax(nrg)
-        Ath[labeled_array == indm + 1, i] = A[labeled_array == indm + 1, i]
+        
+        if nrg != np.zeros((num_features, 1)): 
+            indm = np.argmax(nrg)
+            Ath[labeled_array == indm + 1, i] = A[labeled_array == indm + 1, i]
 
     return Ath
 
