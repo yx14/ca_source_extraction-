@@ -523,7 +523,9 @@ def lars_regression_noise(Yp, X, positive, noise, verbose=False):
     #%% begin main loop
     i = 0
     flag = 0
-    while 1:
+    maxiter = 20
+    ct = 0
+    while ct < maxiter:
         if flag == 1:
             W_lam = 0
             break
@@ -637,10 +639,12 @@ def lars_regression_noise(Yp, X, positive, noise, verbose=False):
             active_set[new] = 1
 
         i = i + 1
+        ct = ct + 1 
     
     Ws_old = Ws
     # end main loop
-
+    if ct == 20:
+        i = i - 1 
     #%% final calculation of mus
     Ws = np.asarray(np.swapaxes(np.swapaxes(Ws_old, 0, 1), 1, 2))
     if flag == 0:
